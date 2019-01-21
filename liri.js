@@ -3,9 +3,9 @@ require("dotenv").config();
 var keys = require("./keys.js");
 var fs = require('fs');
 var Spotify = require("node-spotify-api");
+console.log(process.argv[2])
 
-
-function getSong(songName)  {
+// function getSong(songName)  {
 var spotify = new Spotify(keys.spotify);
 var songName = process.argv[2];
 
@@ -17,7 +17,7 @@ spotify.search({ type: 'track', query: songName }, function(err, data) {
   console.log(data); 
 
 })
-}
+// }
 // user commands:
 // concert-this artist name
 // Name of the venue
