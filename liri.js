@@ -1,24 +1,17 @@
+// assign requirements to variables
 require("dotenv").config();
-
 var keys = require("./keys.js");
 var fs = require('fs');
 var axios = require("axios");
 var Spotify = require("node-spotify-api");
 var moment = require("moment");
-// console.log(process.argv[2])
 
-
+var artist = process.argv.slice(3).join(" ");
+//function for bandsintown
 function concertThis(artist) {
 
-    var artist = process.argv.slice(3).join(" ");
-
-    if (!artist) {
-        artist = "Action Bronson"
-        // what to do here.. not currently working...
-    }
-
-
-    var queryUrl = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id="+process.env.BANDSINTOWN_ID
+    
+    var queryUrl = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=" + process.env.BANDSINTOWN_ID
 
     axios.get(queryUrl).then(
         function (response) {
@@ -37,23 +30,31 @@ function concertThis(artist) {
                         "Location " + concertInfo.venue.city + "\n" +
                         "Date: " + convertedDate.format("MM/DD/YY"))
                 }
-        })
+        }).catch(function (error) {
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+            } else if (error.request) {
+                // The request was made but no response was received
+                // `error.request` is an object that comes back with details pertaining to the error that occurred.
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log("Error", error.message);
+            }
+            console.log(error.config);
+        });
 }
-// user commands:
-// concert-this artist name
-// Name of the venue
-// Venue location
-// Date of the Event (use moment to format this as "MM/DD/YYYY")
-
-
 
 var songName = process.argv.slice(3).join(" ");
-
+//function for Spotify
 function getSong(songName) {
 
+    
     var spotify = new Spotify(keys.spotify);
-
-    //put this outside the function...
 
     if (!songName) {
         songName = "The Sign"
@@ -72,33 +73,18 @@ function getSong(songName) {
     })
 }
 
-
-// spotify-this-song song name
-// Artist(s)
-// The song's name
-// A preview link of the song from Spotify
-// The album that the song is from
-
-
-var getMovie = function (movieName) {
-
-    var movieName = process.argv.slice(3).join(" ");
+var movieName = process.argv.slice(3).join(" ");
+//function for omdb
+function getMovie(movieName) {
 
     if (!movieName) {
         movieName = "Mr Nobody";
     }
 
-    var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey="+process.env.OMDB_ID;
-
-    // This line is just to help us debug against the actual URL.
-    console.log(queryUrl);
+    var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&plot=short&apikey=" + process.env.OMDB_ID;
 
     axios.get(queryUrl).then(
-        function (error, response) {
-
-            if (error) {
-                return console.log(error);
-            }
+        function (response) {
 
             console.log("\n" + "Title: " + response.data.Title + "\n" +
                 "Year: " + response.data.Year + "\n" +
@@ -110,11 +96,29 @@ var getMovie = function (movieName) {
                 "Cast: " + response.data.Actors
             )
         })
+        .catch(function (error) {
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+            } else if (error.request) {
+                // The request was made but no response was received
+                // `error.request` is an object that comes back with details pertaining to the error that occurred.
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log("Error", error.message);
+            }
+            console.log(error.config);
+        });
+
 }
 
-
+// function to grab instructions from random.txt
 function doWhatItSays() {
-    // grab instructions from random.txt file
+    
     fs.readFile("random.txt", "utf8", function (error, data) {
 
         if (error) {
@@ -124,33 +128,33 @@ function doWhatItSays() {
         var dataArr = data.split(",");
 
         for (var i = 0; i < dataArr.length; i++)
-            if (dataArr[i] === "spotify-this-song") {
-                getSong(dataArr[i + 1])
+        
+        if (dataArr[i] === "spotify-this-song") {
+            getSong(dataArr[i + 1])
             }
-        // We will then re-display the content as an array for later use.
+        else if (dataArr[i] === "movie-this") {
+            getMovie(dataArr[i + 1])
+        }
+        else if (dataArr[i] === "concert-this") {
+            concertThis(dataArr[i + 1])
+        }
+        //show the user what input is being used
         console.log(dataArr);
     })
 }
 
-
-
-// getSong()
-// getMovie();
-// doWhatItSays();
-// concertThis();
-
+//switch statement taking in user input to execute desired function
 var command = process.argv[2];
+switch (command) {
 
-switch (command)    {
-    
     case "movie-this":
         getMovie();
         break;
 
-    case "spotify-this":
+    case "spotify-this-song":
         getSong();
         break;
-    
+
     case "concert-this":
         concertThis();
         break;
@@ -160,5 +164,6 @@ switch (command)    {
         break;
 
     default:
-        ("Please enter a valid command.")
+        console.log("\n Please enter a valid command, options are:" +
+        "\n movie-this" + "\n concert-this" + "\n spotify-this-song" + "\n do-what-it-says")
 }
