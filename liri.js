@@ -6,16 +6,16 @@ var axios = require("axios");
 var Spotify = require("node-spotify-api");
 var moment = require("moment");
 
-var artist = process.argv.slice(3).join(" ");
 //function for bandsintown
 function concertThis(artist) {
-
+    if(process.argv.slice(3).join(" ")) {
+    var artist = process.argv.slice(3).join(" ");}
     
     var queryUrl = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=" + process.env.BANDSINTOWN_ID
 
     axios.get(queryUrl).then(
         function (response) {
-            // fix THIS
+           
             for (var i = 0; i < response.data.length; i++)
 
                 if (artist) {
@@ -26,9 +26,21 @@ function concertThis(artist) {
                     var concertDate = concertInfo.datetime
                     var convertedDate = moment(concertDate, dateFormat);
 
-                    console.log("\n" + "Venue Name: " + concertInfo.venue.name + "\n" +
+                    // console.log("\n" + "Venue Name: " + concertInfo.venue.name + "\n" +
+                    //     "Location " + concertInfo.venue.city + "\n" +
+                    //     "Date: " + convertedDate.format("MM/DD/YY"))
+
+                        var output = "\n" + "Venue Name: " + concertInfo.venue.name + "\n" +
                         "Location " + concertInfo.venue.city + "\n" +
-                        "Date: " + convertedDate.format("MM/DD/YY"))
+                        "Date: " + convertedDate.format("MM/DD/YY");
+                    
+                        console.log(output);
+
+                        fs.appendFile("log.txt", ", \n -Search Results: " + output, function(err) {
+                            if (err) {
+                              return console.log(err);
+                            }
+                          });
                 }
         }).catch(function (error) {
             if (error.response) {
@@ -49,10 +61,11 @@ function concertThis(artist) {
         });
 }
 
-var songName = process.argv.slice(3).join(" ");
+
 //function for Spotify
 function getSong(songName) {
-
+    if (process.argv.slice(3).join(" ")) {
+        var songName = process.argv.slice(3).join(" ");}
     
     var spotify = new Spotify(keys.spotify);
 
@@ -65,18 +78,34 @@ function getSong(songName) {
             return console.log('Error occurred: ' + err);
         }
 
-        console.log("\n" + "Artist: " + data.tracks.items[0].album.artists[0].name + "\n" +
-            "Title: " + songName + "\n" +
-            "Listen here: " + data.tracks.items[0].album.external_urls.spotify + "\n" +
-            "Album: " + data.tracks.items[0].album.name);
+        // console.log("\n" + "Artist: " + data.tracks.items[0].album.artists[0].name + "\n" +
+        //     "Title: " + songName + "\n" +
+        //     "Listen here: " + data.tracks.items[0].album.external_urls.spotify + "\n" +
+        //     "Album: " + data.tracks.items[0].album.name);
 
+        var output = "\n" + "Artist: " + data.tracks.items[0].album.artists[0].name + "\n" +
+        "Title: " + songName + "\n" +
+        "Listen here: " + data.tracks.items[0].album.external_urls.spotify + "\n" +
+        "Album: " + data.tracks.items[0].album.name;
+
+            console.log(output)
+
+            fs.appendFile("log.txt", ", \n -Search Results: " + output, function(err) {
+                if (err) {
+                  return console.log(err);
+                }
+              });
     })
 }
 
-var movieName = process.argv.slice(3).join(" ");
+
 //function for omdb
 function getMovie(movieName) {
 
+    if (process.argv.slice(3).join(" ")) {
+        var movieName = process.argv.slice(3).join(" ");}
+    
+    
     if (!movieName) {
         movieName = "Mr Nobody";
     }
@@ -86,15 +115,23 @@ function getMovie(movieName) {
     axios.get(queryUrl).then(
         function (response) {
 
-            console.log("\n" + "Title: " + response.data.Title + "\n" +
-                "Year: " + response.data.Year + "\n" +
-                "IMDB Rating: " + response.data.imdbRating + "\n" +
-                "Rotten Tomatoes Rating: " + response.data.Ratings[1].Value + "\n" +
-                "Country of Production: " + response.data.Country + "\n" +
-                "Language: " + response.data.Language + "\n" +
-                "Plot: " + response.data.Plot + "\n" +
-                "Cast: " + response.data.Actors
-            )
+            var output = "\n" + "Title: " + response.data.Title + "\n" +
+            "Year: " + response.data.Year + "\n" +
+            "IMDB Rating: " + response.data.imdbRating + "\n" +
+            "Rotten Tomatoes Rating: " + response.data.Ratings[1].Value + "\n" +
+            "Country of Production: " + response.data.Country + "\n" +
+            "Language: " + response.data.Language + "\n" +
+            "Plot: " + response.data.Plot + "\n" +
+            "Cast: " + response.data.Actors
+
+            console.log(output)
+
+            fs.appendFile("log.txt", ", \n -Search Results: " + output, function(err) {
+                if (err) {
+                  return console.log(err);
+                }
+              });
+
         })
         .catch(function (error) {
             if (error.response) {
@@ -167,3 +204,5 @@ switch (command) {
         console.log("\n Please enter a valid command, options are:" +
         "\n movie-this" + "\n concert-this" + "\n spotify-this-song" + "\n do-what-it-says")
 }
+
+
