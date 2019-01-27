@@ -25,9 +25,9 @@ A Node app that parses user input and returns song, concert, and movie info from
 * "do-what-it-says" (to grab instructions from your random.txt file)
 
 
-## Liri  in Action Demo:
+## Video Demo:
 * click the file link below to download a demo exhibiting the full functionality of the app
-![liri-demo](./node-liri-demo.mov?)
+* ![liri-demo](./node-liri-demo.mov?)
 
 
 
