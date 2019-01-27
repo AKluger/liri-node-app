@@ -18,3 +18,13 @@ A Node app that parses user input and returns song, concert, and movie info from
 * "movie-this" followed by "movie name" (to look up information about a film)
 * "spotify-this-song" followed by "song name" (to grab information about a song and a link from Spotify to listen)
 * "do-what-it-says" (to grab instructions from your random.txt file)
+
+
+## Liri  in Action Demo:
+
+![liri-demo](./node-liri-demo.mov?)
+
+
+
+#### Authored by: Alex Kluger 2019
+
