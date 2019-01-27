@@ -8,6 +8,11 @@ A Node app that parses user input and returns song, concert, and movie info from
 
 ![env-screenshot](./env-screenshot.png?raw=true ".env file")
 
+* Next, if you do not have API keys for the webservices we are going to use follow instructions here to create accounts and obtain them:
+* Spotify: https://www.npmjs.com/package/node-spotify-api
+* OMDB: http://www.omdbapi.com/apikey.aspx
+* Bands-in-Town: https://manager.bandsintown.com/support/bandsintown-api
+
 
 ## Using Liri:
 
@@ -21,7 +26,7 @@ A Node app that parses user input and returns song, concert, and movie info from
 
 
 ## Liri  in Action Demo:
-
+* click the file link below to download a demo exhibiting the full functionality of the app
 ![liri-demo](./node-liri-demo.mov?)
 
 
