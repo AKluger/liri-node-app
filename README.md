@@ -1,5 +1,5 @@
 # liri-node-app
-A Node app that parses user input and returns song, concert, and movie info from Spotify, Bands in Town, and OMDB APIs, respectively.  Typing in a simple command will returned detailed information about your query!
+A Node app that parses user input and returns song, concert, and movie info from Spotify, Bands in Town, and OMDB APIs, respectively.  Typing in a simple command will return detailed information about your query!
 
 ## Getting Started:
 
